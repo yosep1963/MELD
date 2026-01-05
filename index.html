@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="MELD Score 계산기 - 간 질환 중증도 평가">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MELD Score">
+
+    <title>MELD Score 계산기</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MELD Score 계산기</h1>
+            <p class="subtitle">간 질환 중증도 평가</p>
+        </header>
+
+        <!-- MELD 버전 선택 탭 -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="original">Original MELD</button>
+            <button class="tab-btn" data-tab="meld-na">MELD-Na</button>
+            <button class="tab-btn" data-tab="meld3">MELD 3.0</button>
+        </nav>
+
+        <!-- Original MELD 폼 -->
+        <section id="original" class="tab-content active">
+            <form id="form-original" class="meld-form" data-meld-type="original">
+                <div class="form-group">
+                    <label for="orig-bilirubin">빌리루빈 (mg/dL)</label>
+                    <input type="number" id="orig-bilirubin" data-field="bilirubin"
+                           step="0.1" min="0.1" placeholder="예: 1.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="orig-inr">INR</label>
+                    <input type="number" id="orig-inr" data-field="inr"
+                           step="0.1" min="0.1" placeholder="예: 1.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="orig-creatinine">크레아티닌 (mg/dL)</label>
+                    <input type="number" id="orig-creatinine" data-field="creatinine"
+                           step="0.1" min="0.1" placeholder="예: 0.9" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" data-field="dialysis">
+                        <span class="checkmark"></span>
+                        지난 1주일 내 투석 2회 이상 또는 CVVHD 24시간 이상
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-calculate">계산하기</button>
+                    <button type="reset" class="btn-reset">초기화</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- MELD-Na 폼 -->
+        <section id="meld-na" class="tab-content">
+            <form id="form-meld-na" class="meld-form" data-meld-type="meld-na">
+                <div class="form-group">
+                    <label for="na-bilirubin">빌리루빈 (mg/dL)</label>
+                    <input type="number" id="na-bilirubin" data-field="bilirubin"
+                           step="0.1" min="0.1" placeholder="예: 1.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="na-inr">INR</label>
+                    <input type="number" id="na-inr" data-field="inr"
+                           step="0.1" min="0.1" placeholder="예: 1.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="na-creatinine">크레아티닌 (mg/dL)</label>
+                    <input type="number" id="na-creatinine" data-field="creatinine"
+                           step="0.1" min="0.1" placeholder="예: 0.9" required>
+                </div>
+                <div class="form-group">
+                    <label for="na-sodium">나트륨 (mEq/L)</label>
+                    <input type="number" id="na-sodium" data-field="sodium"
+                           step="1" min="100" max="160" placeholder="예: 140" required>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" data-field="dialysis">
+                        <span class="checkmark"></span>
+                        지난 1주일 내 투석 2회 이상 또는 CVVHD 24시간 이상
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-calculate">계산하기</button>
+                    <button type="reset" class="btn-reset">초기화</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- MELD 3.0 폼 -->
+        <section id="meld3" class="tab-content">
+            <form id="form-meld3" class="meld-form" data-meld-type="meld3">
+                <div class="form-group">
+                    <label>성별</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="male" data-field="gender" required>
+                            <span class="radio-mark"></span>
+                            남성
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="female" data-field="gender">
+                            <span class="radio-mark"></span>
+                            여성
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="m3-bilirubin">빌리루빈 (mg/dL)</label>
+                    <input type="number" id="m3-bilirubin" data-field="bilirubin"
+                           step="0.1" min="0.1" placeholder="예: 1.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="m3-inr">INR</label>
+                    <input type="number" id="m3-inr" data-field="inr"
+                           step="0.1" min="0.1" placeholder="예: 1.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="m3-creatinine">크레아티닌 (mg/dL)</label>
+                    <input type="number" id="m3-creatinine" data-field="creatinine"
+                           step="0.1" min="0.1" placeholder="예: 0.9" required>
+                </div>
+                <div class="form-group">
+                    <label for="m3-sodium">나트륨 (mEq/L)</label>
+                    <input type="number" id="m3-sodium" data-field="sodium"
+                           step="1" min="100" max="160" placeholder="예: 140" required>
+                </div>
+                <div class="form-group">
+                    <label for="m3-albumin">알부민 (g/dL)</label>
+                    <input type="number" id="m3-albumin" data-field="albumin"
+                           step="0.1" min="0.1" placeholder="예: 3.5" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-calculate">계산하기</button>
+                    <button type="reset" class="btn-reset">초기화</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 결과 표시 영역 -->
+        <section id="result" class="result-section hidden">
+            <div class="result-card">
+                <h2>결과</h2>
+                <div class="score-display">
+                    <span class="score-label" id="result-type">MELD Score</span>
+                    <span class="score-value" id="result-score">--</span>
+                </div>
+                <div class="risk-display">
+                    <span class="risk-label">위험도:</span>
+                    <span class="risk-value" id="result-risk">--</span>
+                </div>
+                <div class="mortality-display">
+                    <span class="mortality-label">3개월 사망률:</span>
+                    <span class="mortality-value" id="result-mortality">--</span>
+                </div>
+            </div>
+
+            <!-- 해석 가이드 테이블 -->
+            <div class="guide-table">
+                <h3>MELD 점수 해석 가이드</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>점수</th>
+                            <th>위험도</th>
+                            <th>3개월 사망률</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="risk-low">
+                            <td>6-9</td>
+                            <td>저위험</td>
+                            <td>1.9%</td>
+                        </tr>
+                        <tr class="risk-moderate">
+                            <td>10-19</td>
+                            <td>중간위험</td>
+                            <td>6.0%</td>
+                        </tr>
+                        <tr class="risk-high">
+                            <td>20-29</td>
+                            <td>고위험</td>
+                            <td>19.6%</td>
+                        </tr>
+                        <tr class="risk-very-high">
+                            <td>30-39</td>
+                            <td>매우 고위험</td>
+                            <td>52.6%</td>
+                        </tr>
+                        <tr class="risk-critical">
+                            <td>40+</td>
+                            <td>최고위험</td>
+                            <td>71.3%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 면책 조항 -->
+        <footer class="disclaimer">
+            <p><strong>면책 조항:</strong> 이 계산기는 참고용으로만 사용하시기 바랍니다. 의료 결정은 반드시 전문 의료진과 상담하십시오.</p>
+        </footer>
+
+        <!-- PWA 설치 프롬프트 -->
+        <div id="install-prompt" class="install-prompt hidden">
+            <p>홈 화면에 추가하여 오프라인에서도 사용하세요!</p>
+            <div class="install-buttons">
+                <button id="install-btn" class="btn-install">설치</button>
+                <button id="install-dismiss" class="btn-dismiss">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
