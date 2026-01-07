@@ -2,7 +2,7 @@
  * MELD Score Calculator - Service Worker v2.0
  */
 
-const CACHE_NAME = 'meld-calculator-v2';
+const CACHE_NAME = 'meld-calculator-v3';
 const ASSETS = [
     '/',
     '/index.html',
