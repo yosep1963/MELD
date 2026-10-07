@@ -58,7 +58,8 @@
     // MELD Calculation Module
     // ============================================
     const MELDCalculator = {
-        calculateOriginal(data) {
+        // Unrounded MELD(i), rounded to the tenth decimal place (UNOS)
+        calculateMELDi(data) {
             let { bilirubin, inr, creatinine, dialysis } = data;
 
             bilirubin = Math.max(bilirubin, 1.0);
@@ -70,26 +71,31 @@
                           (11.2 * Math.log(inr)) +
                           (9.57 * Math.log(creatinine)) + 6.43;
 
-            return Utils.clamp(Math.round(score), 6, 40);
+            return Math.round(score * 10) / 10;
+        },
+
+        calculateOriginal(data) {
+            return Utils.clamp(Math.round(this.calculateMELDi(data)), 6, 40);
         },
 
         calculateMELDNa(data) {
-            const meld = this.calculateOriginal(data);
+            // Use MELD(i), not the integer MELD, to avoid double rounding
+            const meldi = this.calculateMELDi(data);
             let { sodium } = data;
             sodium = Utils.clamp(sodium, 125, 137);
 
-            if (meld < 12) return meld;
+            if (meldi <= 11) return Utils.clamp(Math.round(meldi), 6, 40);
 
-            const meldNa = meld + 1.32 * (137 - sodium) - (0.033 * meld * (137 - sodium));
+            const meldNa = meldi + 1.32 * (137 - sodium) - (0.033 * meldi * (137 - sodium));
             return Utils.clamp(Math.round(meldNa), 6, 40);
         },
 
         calculateMELD3(data) {
-            let { gender, bilirubin, inr, creatinine, sodium, albumin } = data;
+            let { gender, bilirubin, inr, creatinine, sodium, albumin, dialysis } = data;
 
             bilirubin = Math.max(bilirubin, 1.0);
             inr = Math.max(inr, 1.0);
-            creatinine = Utils.clamp(creatinine, 1.0, 3.0);
+            creatinine = dialysis ? 3.0 : Utils.clamp(creatinine, 1.0, 3.0);
             sodium = Utils.clamp(sodium, 125, 137);
             albumin = Utils.clamp(albumin, 1.5, 3.5);
 
@@ -101,8 +107,8 @@
                           (-0.24 * (137 - sodium) * Math.log(bilirubin)) +
                           (9.09 * Math.log(inr)) +
                           (11.14 * Math.log(creatinine)) +
-                          (1.85 * (3.5 - albumin)) +
-                          (-1.83 * (3.5 - albumin) * Math.log(creatinine)) + 6;
+                          (1.85 * (2.8 - albumin)) +
+                          (-1.83 * (2.8 - albumin) * Math.log(creatinine)) + 6;
 
             return Utils.clamp(Math.round(score), 6, 40);
         },
